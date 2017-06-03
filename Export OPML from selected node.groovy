@@ -25,7 +25,7 @@ class OPMLWriter {
     def outline_tag='<outline $$attributes$$>'
     def processNode(newNode, childPosition) {
         def nodeLevel = newNode.getNodeLevel(true)
-        def outline_attribs='text="'+newNode.plainText+'"'
+        def outline_attribs='text="'+convertQuotes(newNode.plainText)+'"'
         def hasnote=false
         if (newNode.noteText) {
             outline_attribs+=' _note="'+removeHtmlTags(newNode.noteText)+'"'
@@ -61,6 +61,12 @@ class OPMLWriter {
         strippedText = strippedText.replaceAll('<.*?>', '') // remove anythiing in between < and >
         strippedText = strippedText.replaceAll('^\\s*', '') // remove whitespace
         strippedText = strippedText.replaceAll('\n\n\n','\n') // replace multiple line feed with single line feed
+        strippedText = strippedText.replaceAll('\"','&quot;') // replace double quotes with XML escaped version
+        return strippedText
+    }
+
+    def convertQuotes(text) {
+        def strippedText = text.replaceAll('\"','&quot;') // replace double quotes with XML escaped version
         return strippedText
     }
 
@@ -121,4 +127,3 @@ if (returnVal == JFileChooser.APPROVE_OPTION) {
 } else {
     c.statusInfo="Export OPML cancelled by user"
 }
-
